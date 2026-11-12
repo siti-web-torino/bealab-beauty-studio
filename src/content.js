@@ -22,7 +22,9 @@ export const studio = {
     { day: 'Sabato', time: '9:30 – 13:30' },
     { day: 'Domenica', time: 'Chiuso' },
   ],
-  socials: [], // { label: 'Instagram', url: 'URL verificato' }
+  socials: [
+    { label: 'Instagram', handle: '@bealab_beautystudio', icon: 'instagram', url: 'https://www.instagram.com/bealab_beautystudio/' },
+  ],
   legal: { owner: '', vatNumber: '', contact: '', providers: '' },
   // Trascritte dagli screenshot Google Maps forniti dall’utente. Cognomi abbreviati su sua richiesta.
   reviews: [
