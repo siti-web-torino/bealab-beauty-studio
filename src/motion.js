@@ -20,62 +20,59 @@ export function animateDialog(dialog) {
 
 function playBrandIntro() {
   const intro = document.querySelector('.brand-intro');
-  if (!intro) return Promise.resolve();
+  if (!intro) return;
 
   // Non interrompere i link a una sezione, né ripetere l'intro nella stessa scheda.
   let seen = false;
   try { seen = sessionStorage.getItem('bealab:intro-seen') === '1'; } catch { /* Storage non disponibile: il sito resta utilizzabile. */ }
   if (reducedMotion.matches || seen || window.location.hash) {
     intro.remove();
-    return Promise.resolve();
+    return;
   }
 
-  return new Promise(resolve => {
-    let finished = false;
-    let timeout;
-    function finish() {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timeout);
-      const restoreFocus = intro.contains(document.activeElement);
-      intro.remove();
-      document.removeEventListener('keydown', onKeyDown);
-      document.removeEventListener('focusin', onFocus);
-      window.removeEventListener('wheel', finish);
-      window.removeEventListener('touchstart', finish);
-      window.removeEventListener('pagehide', finish);
-      reducedMotion.removeEventListener('change', onMotionChange);
-      if (restoreFocus) document.querySelector('.site-header .brand')?.focus({ preventScroll: true });
-      resolve();
-    }
-    function onKeyDown(event) {
-      if (event.key === 'Escape' || event.key === 'Tab') finish();
-    }
-    function onFocus(event) { if (!intro.contains(event.target)) finish(); }
-    function onMotionChange(event) { if (event.matches) finish(); }
+  let finished = false;
+  let timeout;
+  function finish() {
+    if (finished) return;
+    finished = true;
+    clearTimeout(timeout);
+    const restoreFocus = intro.contains(document.activeElement);
+    intro.remove();
+    document.removeEventListener('keydown', onKeyDown);
+    document.removeEventListener('focusin', onFocus);
+    window.removeEventListener('wheel', finish);
+    window.removeEventListener('touchstart', finish);
+    window.removeEventListener('pagehide', finish);
+    reducedMotion.removeEventListener('change', onMotionChange);
+    if (restoreFocus) document.querySelector('.site-header .brand')?.focus({ preventScroll: true });
+  }
+  function onKeyDown(event) {
+    if (event.key === 'Escape' || event.key === 'Tab') finish();
+  }
+  function onFocus(event) { if (!intro.contains(event.target)) finish(); }
+  function onMotionChange(event) { if (event.matches) finish(); }
 
-    intro.querySelector('.intro-skip').addEventListener('click', finish);
-    intro.addEventListener('animationend', event => {
-      if (event.target === intro && event.animationName === 'intro-leave') finish();
-    });
-    document.addEventListener('keydown', onKeyDown);
-    document.addEventListener('focusin', onFocus);
-    window.addEventListener('wheel', finish, { passive: true });
-    window.addEventListener('touchstart', finish, { passive: true });
-    window.addEventListener('pagehide', finish);
-    reducedMotion.addEventListener('change', onMotionChange);
-    // Limite di sicurezza anche se il browser non esegue le animazioni CSS.
-    timeout = setTimeout(finish, 2400);
-    try { sessionStorage.setItem('bealab:intro-seen', '1'); } catch { /* Nessuna dipendenza dallo storage. */ }
-    intro.hidden = false;
+  intro.querySelector('.intro-skip').addEventListener('click', finish);
+  intro.addEventListener('animationend', event => {
+    if (event.target === intro && event.animationName === 'intro-leave') finish();
   });
+  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('focusin', onFocus);
+  window.addEventListener('wheel', finish, { passive: true });
+  window.addEventListener('touchstart', finish, { passive: true });
+  window.addEventListener('pagehide', finish);
+  reducedMotion.addEventListener('change', onMotionChange);
+  // Limite di sicurezza anche se il browser non esegue le animazioni CSS.
+  timeout = setTimeout(finish, 2400);
+  try { sessionStorage.setItem('bealab:intro-seen', '1'); } catch { /* Nessuna dipendenza dallo storage. */ }
+  intro.hidden = false;
 }
 
 export function initMotion() {
   const root = document.documentElement;
   const header = document.querySelector('.site-header');
   const hero = document.querySelector('.hero');
-  const introFinished = playBrandIntro();
+  playBrandIntro();
   let scrollFrame = 0;
 
   function updateScroll() {
@@ -125,19 +122,6 @@ export function initMotion() {
       observer.observe(element);
     });
   }
-
-  introFinished.then(() => {
-    document.querySelectorAll('.hero-copy > *').forEach((element, index) => {
-      play(element, [
-        { opacity: 0, transform: 'translateY(20px)' },
-        { opacity: 1, transform: 'translateY(0)' },
-      ], { duration: 850, delay: index * 80, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
-    });
-    play(document.querySelector('.hero-image-frame'), [
-      { opacity: 0, transform: 'translateY(18px) scale(.985)' },
-      { opacity: 1, transform: 'translateY(0) scale(1)' },
-    ], { duration: 1000, delay: 100, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
-  });
 
   document.querySelectorAll('.treatment-image').forEach(card => {
     let pointerFrame = 0;
