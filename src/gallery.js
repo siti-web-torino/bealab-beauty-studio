@@ -1,0 +1,113 @@
+const esc = text => String(text).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+
+function photoTile(photo, index) {
+  return `<button class="gallery-tile" type="button" data-photo-index="${index}" aria-label="Ingrandisci: ${esc(photo.caption)}">
+    <span class="gallery-tile-image"><img src="${esc(photo.thumbnail)}" alt="" width="${photo.width}" height="${photo.height}" loading="lazy" decoding="async"><span class="gallery-zoom" aria-hidden="true"><i data-lucide="plus"></i></span></span>
+    <span class="gallery-tile-caption">${esc(photo.caption)}</span>
+  </button>`;
+}
+
+export function galleryMarkup(photos) {
+  return `<section class="manicure-gallery" aria-labelledby="gallery-title">
+    <span class="eyebrow">FATTO DA NOI, PER TE</span>
+    <h3 id="gallery-title">I nostri lavori</h3>
+    <p>Una selezione di manicure realizzate da Bealab.<br>Tocca una foto per guardarla da vicino.</p>
+    <div class="manicure-gallery-grid">${photos.slice(0, 3).map(photoTile).join('')}</div>
+    <details class="gallery-more">
+      <summary class="text-link gallery-toggle"><span class="gallery-toggle-label">Vedi tutti i lavori</span><span class="gallery-total">${photos.length}</span><i data-lucide="arrow-down" aria-hidden="true"></i></summary>
+      <div class="manicure-gallery-grid gallery-extra"></div>
+    </details>
+  </section>`;
+}
+
+export function initPhotoGallery(contentDialog, refreshIcons) {
+  let photos = [];
+  let currentIndex = 0;
+  const viewer = document.createElement('dialog');
+  viewer.className = 'photo-dialog';
+  viewer.setAttribute('aria-labelledby', 'photo-title');
+  viewer.setAttribute('aria-describedby', 'photo-count');
+  viewer.innerHTML = `<div class="photo-toolbar"><span class="eyebrow">MANICURE · BEALAB</span><button class="photo-close" type="button" aria-label="Chiudi foto"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <div class="photo-stage"><img class="photo-image" alt="" decoding="async"></div>
+    <div class="photo-navigation">
+      <button class="photo-previous" type="button" aria-label="Foto precedente"><i data-lucide="arrow-left" aria-hidden="true"></i></button>
+      <div class="photo-caption"><p id="photo-title"></p><span id="photo-count" aria-live="polite" aria-atomic="true"></span></div>
+      <button class="photo-next" type="button" aria-label="Foto successiva"><i data-lucide="arrow-right" aria-hidden="true"></i></button>
+    </div>`;
+  document.body.append(viewer);
+  refreshIcons();
+
+  const image = viewer.querySelector('.photo-image');
+  const caption = viewer.querySelector('#photo-title');
+  const count = viewer.querySelector('#photo-count');
+  const syncScrollLock = () => document.body.classList.toggle('dialog-open', contentDialog.open || viewer.open);
+
+  function showPhoto(index) {
+    if (!photos.length) return;
+    currentIndex = (index + photos.length) % photos.length;
+    const photo = photos[currentIndex];
+    image.alt = `Manicure Bealab: ${photo.caption}`;
+    image.src = photo.image;
+    image.width = photo.width;
+    image.height = photo.height;
+    caption.textContent = photo.caption;
+    count.textContent = `${currentIndex + 1} / ${photos.length}`;
+  }
+
+  contentDialog.addEventListener('click', event => {
+    const trigger = event.target.closest('[data-photo-index]');
+    if (!trigger || !photos.length) return;
+    showPhoto(Number(trigger.dataset.photoIndex));
+    viewer.showModal();
+    syncScrollLock();
+  });
+  contentDialog.addEventListener('toggle', event => {
+    const details = event.target;
+    if (!details.matches('.gallery-more')) return;
+    const extra = details.querySelector('.gallery-extra');
+    if (details.open && !extra.children.length) {
+      extra.innerHTML = photos.slice(3).map((photo, index) => photoTile(photo, index + 3)).join('');
+      refreshIcons();
+    }
+    details.querySelector('.gallery-toggle-label').textContent = details.open ? 'Mostra meno' : 'Vedi tutti i lavori';
+  }, true);
+
+  viewer.querySelector('.photo-close').addEventListener('click', () => viewer.close());
+  viewer.querySelector('.photo-previous').addEventListener('click', () => showPhoto(currentIndex - 1));
+  viewer.querySelector('.photo-next').addEventListener('click', () => showPhoto(currentIndex + 1));
+  viewer.addEventListener('keydown', event => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      showPhoto(currentIndex + (event.key === 'ArrowLeft' ? -1 : 1));
+    }
+  });
+  let swipeStart;
+  viewer.querySelector('.photo-stage').addEventListener('pointerdown', event => {
+    swipeStart = event.pointerType === 'touch' ? { x: event.clientX, y: event.clientY } : null;
+  });
+  viewer.querySelector('.photo-stage').addEventListener('pointerup', event => {
+    if (!swipeStart) return;
+    const x = event.clientX - swipeStart.x;
+    const y = event.clientY - swipeStart.y;
+    swipeStart = null;
+    if (Math.abs(x) > 45 && Math.abs(x) > Math.abs(y) * 1.3) showPhoto(currentIndex + (x < 0 ? 1 : -1));
+  });
+  viewer.querySelector('.photo-stage').addEventListener('pointercancel', () => { swipeStart = null; });
+  viewer.addEventListener('click', event => {
+    if (event.target !== viewer) return;
+    const bounds = viewer.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) viewer.close();
+  });
+  viewer.addEventListener('close', () => {
+    image.removeAttribute('src');
+    syncScrollLock();
+  });
+  contentDialog.addEventListener('close', () => { if (viewer.open) viewer.close(); });
+
+  return nextPhotos => {
+    if (viewer.open) viewer.close();
+    photos = nextPhotos;
+    currentIndex = 0;
+  };
+}

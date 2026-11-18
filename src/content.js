@@ -1,3 +1,5 @@
+import { manicurePhotos } from './manicure-photos.js';
+
 // Tutti i dati commerciali da aggiornare prima della pubblicazione sono qui.
 export const assetUrl = path => path.startsWith('data:') ? path : import.meta.env.BASE_URL + path.replace(/^\/+/, '');
 
@@ -57,7 +59,23 @@ export const team = [
 ].map(person => ({ ...person, image: assetUrl(person.image) }));
 
 export const treatments = [
-  { id: 'mani', number: '01', name: 'Manicure & nail care', short: 'Piccoli dettagli, grande bellezza.', description: 'Un momento dedicato alle tue mani e ai tuoi piedi, con la cura che meritano.', services: ['Manicure', 'Semipermanente', 'Pedicure', 'Ricostruzione unghie'], image: '/images/nails.webp', alt: 'Dettaglio dimostrativo di una manicure nei toni nude', position: 'center' },
+  {
+    id: 'mani', number: '01', name: 'Manicure & nail care',
+    short: 'Piccoli dettagli, grande bellezza.',
+    description: 'Un momento dedicato alle tue mani, con la cura che meritano. Dai colori più delicati alla nail art, troviamo insieme il tuo stile.',
+    services: [
+      'Manicure classica',
+      'Manicure con semipermanente',
+      'Manicure con smaltogel',
+      'Manicure con copertura in gel o acrilico',
+      'Ricostruzione unghie con gel o acrilico',
+    ],
+    note: 'Per informazioni sui servizi manicure, modalità e prezzi, contatta il centro.',
+    image: '/images/manicure/lattiginoso-zebrato-thumb.webp',
+    alt: 'Manicure Bealab nei toni rosa lattiginoso con un dettaglio zebrato',
+    position: 'center',
+    gallery: manicurePhotos.map(photo => ({ ...photo, image: assetUrl(photo.image), thumbnail: assetUrl(photo.thumbnail) })),
+  },
   { id: 'viso', number: '02', name: 'Trattamenti viso', short: 'Ritrova la tua luce naturale.', description: 'Ascoltare la tua pelle e dedicarti un rituale di bellezza pensato intorno a te.', services: ['Pulizia del viso', 'Trattamenti personalizzati per la pelle', 'Cura e benessere del viso'], image: '/images/hero.webp', alt: 'Immagine dimostrativa di un rituale di cura del viso', position: '65% center' },
   { id: 'sguardo', number: '03', name: 'Ciglia & sguardo', short: 'La bellezza, al primo sguardo.', description: 'Un’attenzione speciale ai dettagli che rendono il tuo sguardo unico.', services: ['Trattamenti per valorizzare lo sguardo', 'Laminazione ciglia'], image: '/images/eyes.webp', alt: 'Dettaglio dimostrativo di occhi chiusi e ciglia naturali', position: 'center' },
   { id: 'depilazione', number: '04', name: 'Depilazione', short: 'La leggerezza sulla pelle.', description: 'Cura e delicatezza per sentirti a tuo agio, ogni giorno.', services: ['Ceretta', 'Trattamenti di epilazione'], image: '/images/wellness.webp', alt: 'Accessori dimostrativi dedicati alla cura della pelle', position: 'center' },

@@ -7,6 +7,7 @@ import { createIcons, ArrowUpRight, ArrowRight, ArrowLeft, ArrowDown, Menu, X, P
 import { studio, treatments, values, team, assetUrl } from './content.js';
 import './style.css';
 import { initMotion, animateDialog } from './motion.js';
+import { galleryMarkup, initPhotoGallery } from './gallery.js';
 
 const esc = (text) => String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeUrl = (url) => { try { const u = new URL(url); return u.protocol === 'https:' ? esc(u.href) : '#'; } catch { return '#'; } };
@@ -72,8 +73,8 @@ document.querySelector('#app').innerHTML = `
 
     <section class="treatments section-pad" id="trattamenti" aria-labelledby="treatments-title">
       <div class="section-heading reveal"><div><span class="eyebrow">03 / I NOSTRI TRATTAMENTI</span><h2 id="treatments-title">Ogni bellezza ha<br><em>il suo rituale.</em></h2></div><div class="heading-aside"><p>Dalle mani al viso, un’attenzione speciale<br>per ogni parte di te.</p><a href="${studio.whatsapp}" class="text-link" ${external}>Troviamo il tuo trattamento ${icon('arrow-up-right')}</a></div></div>
-      <div class="treatment-grid">${treatments.map(t => `<article class="treatment-card reveal"><button class="treatment-image" data-treatment="${t.id}" aria-label="Scopri ${esc(t.name)}"><img src="${t.image}" alt="${esc(t.alt)}" style="object-position:${t.position}" loading="lazy" width="700" height="850"><span class="treatment-number">${t.number}</span><span class="treatment-open">${icon('plus')}</span></button><div class="treatment-info"><h3>${t.name}</h3><p>${t.short}</p><button class="text-link" data-treatment="${t.id}">Richiedi informazioni ${icon('arrow-up-right')}</button></div></article>`).join('')}</div>
-      <p class="section-footnote">I servizi presentati sono una selezione dimostrativa, da confermare con il centro.</p>
+      <div class="treatment-grid">${treatments.map(t => `<article class="treatment-card reveal"><button class="treatment-image" data-treatment="${t.id}" aria-label="Scopri ${esc(t.name)}"><img src="${t.image}" alt="${esc(t.alt)}" style="object-position:${t.position}" loading="lazy" width="700" height="850"><span class="treatment-number">${t.number}</span><span class="treatment-open">${icon('plus')}</span></button><div class="treatment-info"><h3>${t.name}</h3><p>${t.short}</p><button class="text-link" data-treatment="${t.id}">${t.gallery?.length ? 'Servizi e lavori' : 'Richiedi informazioni'} ${icon('arrow-up-right')}</button></div></article>`).join('')}</div>
+      <p class="section-footnote">Contatta il centro per informazioni sui trattamenti, modalità e prezzi.</p>
     </section>
 
     <section class="values section-pad" id="valori" aria-labelledby="values-title"><div class="values-title reveal"><span class="eyebrow">LA DIFFERENZA È NELLA CURA</span><h2 id="values-title">La differenza è nei dettagli.<br><em>E nel modo di accoglierti.</em></h2></div><div class="values-grid">${values.map(v=>`<article class="value-item reveal">${icon(v.icon)}<h3>${v.title}</h3><p>${v.text}</p></article>`).join('')}</div></section>
@@ -84,7 +85,7 @@ document.querySelector('#app').innerHTML = `
 
     <section class="contact section-pad" id="contatti" aria-labelledby="contact-title"><div class="contact-copy reveal"><span class="eyebrow">05 / CI TROVI QUI</span><h2 id="contact-title">Un angolo di bellezza,<br><em>a Torino.</em></h2><p>Passa a trovarci in Corso Giovanni Agnelli,<br>nel quartiere Santa Rita. Ti aspettiamo!</p><div class="contact-details"><div>${icon('map-pin')}<div><h3>Vieni a trovarci</h3><p>${studio.address}<br>${studio.postalCode} ${studio.city}</p></div></div><div>${icon('phone')}<div><h3>Parliamone</h3><a href="${studio.phoneHref}">${studio.phone}</a></div></div><div class="contact-hours">${icon('clock-3')}<div class="contact-hours-content"><h3>I nostri orari</h3>${studio.hours.length ? `<table class="opening-hours" aria-label="Orari di apertura"><tbody>${studio.hours.map(h=>`<tr><th scope="row">${esc(h.day)}</th><td>${esc(h.time)}</td></tr>`).join('')}</tbody></table>` : `<p>Contattaci per conoscere gli orari<br>e concordare il tuo appuntamento.</p>`}</div></div></div><a class="text-link" href="${studio.maps}" ${external}>Indicazioni stradali ${icon('arrow-up-right')}</a>${socialLinks ? `<div class="contact-socials">${socialLinks}</div>` : ''}</div><div class="map-panel reveal" id="map-panel"><div class="map-illustration" aria-hidden="true"><span class="map-block block-a"></span><span class="map-block block-b"></span><span class="map-block block-c"></span><span class="map-block block-d"></span><span class="map-road road-one"></span><span class="map-road road-two"></span><span class="map-road road-three"></span><span class="map-road-label">CORSO GIOVANNI AGNELLI</span><span class="map-pin">${icon('map-pin')}</span></div><div class="map-card"><span class="map-card-brand">Bealab</span><p>Corso Giovanni Agnelli 52/C · Torino</p><button id="load-map" class="text-link">Carica Google Maps ${icon('arrow-up-right')}</button><small>Schema illustrativo. Caricando la mappa ti colleghi a Google.</small></div></div></section>
   </main>
-  <footer class="footer"><div class="footer-main"><div class="footer-brand"><a class="brand" href="#home" aria-label="Bealab, inizio pagina">${mark}</a><p>Professionalità, una chiacchiera<br>e un momento per te. A Torino, dal ${studio.openingYear}.</p></div><div class="footer-links"><span class="eyebrow">ESPLORA</span><a href="#filosofia">Il nostro mondo</a><a href="#squadra">Quelle di Bealab</a><a href="#trattamenti">I trattamenti</a><a href="#contatti">Dove siamo</a></div><div class="footer-links"><span class="eyebrow">RESTIAMO IN CONTATTO</span><a href="${studio.phoneHref}">${studio.phone}</a><a href="${studio.whatsapp}" ${external}>Scrivici su WhatsApp ${icon('arrow-up-right')}</a><p>${studio.address}<br>${studio.postalCode} ${studio.city}</p>${socialLinks ? `<div class="footer-socials">${socialLinks}</div>` : ''}</div><a class="back-top" href="#home" aria-label="Torna all’inizio">${icon('arrow-up-right')}</a></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} Bealab – Beauty Studio</span><span>Foto del team e immagini illustrative</span><button class="privacy-link" data-privacy>Informativa privacy</button></div></footer>
+  <footer class="footer"><div class="footer-main"><div class="footer-brand"><a class="brand" href="#home" aria-label="Bealab, inizio pagina">${mark}</a><p>Professionalità, una chiacchiera<br>e un momento per te. A Torino, dal ${studio.openingYear}.</p></div><div class="footer-links"><span class="eyebrow">ESPLORA</span><a href="#filosofia">Il nostro mondo</a><a href="#squadra">Quelle di Bealab</a><a href="#trattamenti">I trattamenti</a><a href="#contatti">Dove siamo</a></div><div class="footer-links"><span class="eyebrow">RESTIAMO IN CONTATTO</span><a href="${studio.phoneHref}">${studio.phone}</a><a href="${studio.whatsapp}" ${external}>Scrivici su WhatsApp ${icon('arrow-up-right')}</a><p>${studio.address}<br>${studio.postalCode} ${studio.city}</p>${socialLinks ? `<div class="footer-socials">${socialLinks}</div>` : ''}</div><a class="back-top" href="#home" aria-label="Torna all’inizio">${icon('arrow-up-right')}</a></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} Bealab – Beauty Studio</span><span>Foto del team, lavori manicure e immagini illustrative</span><button class="privacy-link" data-privacy>Informativa privacy</button></div></footer>
   <a class="floating-whatsapp" href="${studio.whatsapp}" ${external} aria-label="Contatta Bealab su WhatsApp">${waIcon}<span>Parliamone</span></a>
   <dialog class="content-dialog" id="content-dialog" aria-labelledby="dialog-title"><div class="dialog-toolbar"><button class="dialog-close" aria-label="Chiudi finestra">${icon('x')}</button></div><div id="dialog-content"></div></dialog>
 `;
@@ -108,8 +109,36 @@ matchMedia('(min-width: 1001px)').addEventListener('change',e=>{if(e.matches)clo
 
 const contentDialog = document.querySelector('#content-dialog');
 const content = document.querySelector('#dialog-content');
-function openContent(html) { content.innerHTML=html; drawIcons(); contentDialog.showModal(); document.body.classList.add('dialog-open'); animateDialog(contentDialog); }
-document.querySelectorAll('[data-treatment]').forEach(button=>button.addEventListener('click',()=>{const t=treatments.find(t=>t.id===button.dataset.treatment); openContent(`<img class="dialog-treatment-image" src="${t.image}" alt="${esc(t.alt)}"><div class="dialog-body"><span class="eyebrow">IL TUO RITUALE BEALAB · ${t.number}</span><h2 id="dialog-title">${t.name}</h2><p>${t.description}</p><ul class="service-list">${t.services.map(s=>`<li>${s}${icon('sparkles')}</li>`).join('')}</ul><p class="dialog-note">Questa è una selezione dimostrativa. Contatta il centro per confermare servizi disponibili, modalità e prezzi.</p><a class="button button-dark" href="${studio.whatsapp}" ${external}>Richiedi informazioni ${waIcon}</a></div>`);}));
+const setGalleryPhotos = initPhotoGallery(contentDialog, drawIcons);
+function openContent(html, gallery = []) {
+  setGalleryPhotos(gallery);
+  content.innerHTML = html;
+  contentDialog.classList.toggle('has-gallery', gallery.length > 0);
+  drawIcons();
+  contentDialog.showModal();
+  contentDialog.scrollTop = 0;
+  document.body.classList.add('dialog-open');
+  animateDialog(contentDialog);
+}
+function openTreatment(treatment) {
+  const gallery = treatment.gallery || [];
+  const coverIndex = gallery.findIndex(photo => photo.thumbnail === treatment.image);
+  const cover = `<img class="dialog-treatment-image" src="${esc(treatment.image)}" alt="${esc(treatment.alt)}">`;
+  openContent(`
+    ${coverIndex >= 0 ? `<button class="gallery-cover" type="button" data-photo-index="${coverIndex}" aria-label="Ingrandisci la foto di copertina">${cover}<span class="gallery-cover-hint">Guarda da vicino ${icon('plus')}</span></button>` : cover}
+    <div class="dialog-body">
+      <span class="eyebrow">IL TUO RITUALE BEALAB · ${treatment.number}</span>
+      <h2 id="dialog-title">${esc(treatment.name)}</h2>
+      <p>${esc(treatment.description)}</p>
+      <ul class="service-list">${treatment.services.map(service => `<li>${esc(service)}${icon('sparkles')}</li>`).join('')}</ul>
+      <p class="dialog-note">${esc(treatment.note || 'Questa è una selezione dimostrativa. Contatta il centro per confermare servizi disponibili, modalità e prezzi.')}</p>
+      <a class="button button-dark" href="${studio.whatsapp}" ${external}>Richiedi informazioni ${waIcon}</a>
+      ${gallery.length ? galleryMarkup(gallery) : ''}
+    </div>`, gallery);
+}
+document.querySelectorAll('[data-treatment]').forEach(button => button.addEventListener('click', () => {
+  openTreatment(treatments.find(treatment => treatment.id === button.dataset.treatment));
+}));
 document.querySelectorAll('[data-privacy]').forEach(button=>button.addEventListener('click',()=>openContent(`<div class="dialog-body privacy-body"><span class="eyebrow">TRASPARENZA E PRIVACY</span><h2 id="dialog-title">La tua privacy,<br><em>con cura.</em></h2><p class="privacy-status">Documento preliminare per la demo, da completare prima della pubblicazione. Non costituisce un’informativa definitiva.</p><h3>Come funziona questa demo</h3><p>Il sito non contiene moduli per raccogliere dati personali, non utilizza strumenti di analisi, pubblicità o cookie di profilazione. Font e immagini vengono serviti dal sito. Il gestore dell’hosting può trattare dati tecnici di connessione secondo le proprie condizioni.</p><h3>Servizi esterni</h3><p>I collegamenti a WhatsApp e Google aprono i rispettivi servizi solo quando scegli di visitarli. La mappa Google non è caricata automaticamente: il pulsante dedicato attiva la connessione a Google, che può trattare indirizzo IP e altri dati tecnici secondo la propria <a href="https://policies.google.com/privacy?hl=it" ${external}>informativa privacy</a>. Consultare anche l’<a href="https://www.whatsapp.com/legal/privacy-policy?lang=it" ${external}>informativa WhatsApp</a>.</p><h3>Informazioni del titolare</h3><dl class="legal-fields"><dt>Titolare e recapito privacy</dt><dd>${esc(studio.legal.owner || 'Da inserire dal titolare prima della pubblicazione')}${studio.legal.contact ? ' · '+esc(studio.legal.contact) : ''}</dd><dt>Partita IVA</dt><dd>${esc(studio.legal.vatNumber || 'Da verificare e inserire prima della pubblicazione')}</dd><dt>Fornitori del servizio</dt><dd>${esc(studio.legal.providers || 'Hosting e relativi fornitori da confermare')}</dd></dl><h3>Da completare prima della pubblicazione</h3><p>Il titolare dovrà verificare finalità e basi giuridiche dei trattamenti effettivi, tempi di conservazione, destinatari, eventuali trasferimenti e modalità per esercitare i diritti previsti dal GDPR e presentare reclamo al Garante. La configurazione della mappa e ogni futuro servizio esterno vanno verificati rispetto ai requisiti applicabili.</p></div>`)));
 
 contentDialog.querySelector('.dialog-close').addEventListener('click',()=>contentDialog.close());
