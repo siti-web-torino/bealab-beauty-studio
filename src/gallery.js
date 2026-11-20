@@ -7,22 +7,27 @@ function photoTile(photo, index) {
   </button>`;
 }
 
-export function galleryMarkup(photos) {
-  return `<section class="manicure-gallery" aria-labelledby="gallery-title">
-    <span class="eyebrow">FATTO DA NOI, PER TE</span>
-    <h3 id="gallery-title">I nostri lavori</h3>
-    <p>Una selezione di manicure realizzate da Bealab.<br>Tocca una foto per guardarla da vicino.</p>
-    <div class="manicure-gallery-grid">${photos.slice(0, 3).map(photoTile).join('')}</div>
-    <details class="gallery-more">
+export function galleryMarkup(photos, {
+  eyebrow = 'FATTO DA NOI, PER TE',
+  title = 'I nostri lavori',
+  description = 'Una selezione di manicure realizzate da Bealab.',
+} = {}) {
+  return `<section class="treatment-gallery" aria-labelledby="gallery-title">
+    <span class="eyebrow">${esc(eyebrow)}</span>
+    <h3 id="gallery-title">${esc(title)}</h3>
+    <p>${esc(description)}<br>Tocca una foto per guardarla da vicino.</p>
+    <div class="treatment-gallery-grid${photos.length === 2 ? ' gallery-pair' : ''}">${photos.slice(0, 3).map(photoTile).join('')}</div>
+    ${photos.length > 3 ? `<details class="gallery-more">
       <summary class="text-link gallery-toggle"><span class="gallery-toggle-label">Vedi tutti i lavori</span><span class="gallery-total">${photos.length}</span><i data-lucide="arrow-down" aria-hidden="true"></i></summary>
-      <div class="manicure-gallery-grid gallery-extra"></div>
-    </details>
+      <div class="treatment-gallery-grid gallery-extra"></div>
+    </details>` : ''}
   </section>`;
 }
 
 export function initPhotoGallery(contentDialog, refreshIcons) {
   let photos = [];
   let currentIndex = 0;
+  let galleryTitle = 'Manicure · Bealab';
   const viewer = document.createElement('dialog');
   viewer.className = 'photo-dialog';
   viewer.setAttribute('aria-labelledby', 'photo-title');
@@ -46,7 +51,7 @@ export function initPhotoGallery(contentDialog, refreshIcons) {
     if (!photos.length) return;
     currentIndex = (index + photos.length) % photos.length;
     const photo = photos[currentIndex];
-    image.alt = `Manicure Bealab: ${photo.caption}`;
+    image.alt = `${galleryTitle}: ${photo.caption}`;
     image.src = photo.image;
     image.width = photo.width;
     image.height = photo.height;
@@ -57,6 +62,7 @@ export function initPhotoGallery(contentDialog, refreshIcons) {
   contentDialog.addEventListener('click', event => {
     const trigger = event.target.closest('[data-photo-index]');
     if (!trigger || !photos.length) return;
+    contentDialog.querySelectorAll('video').forEach(video => video.pause());
     showPhoto(Number(trigger.dataset.photoIndex));
     viewer.showModal();
     syncScrollLock();
@@ -105,9 +111,15 @@ export function initPhotoGallery(contentDialog, refreshIcons) {
   });
   contentDialog.addEventListener('close', () => { if (viewer.open) viewer.close(); });
 
-  return nextPhotos => {
+  return (nextPhotos, title = 'Manicure · Bealab') => {
     if (viewer.open) viewer.close();
     photos = nextPhotos;
     currentIndex = 0;
+    galleryTitle = title;
+    viewer.querySelector('.photo-toolbar .eyebrow').textContent = title.toLocaleUpperCase('it-IT');
+    const singlePhoto = photos.length < 2;
+    viewer.querySelector('.photo-navigation').classList.toggle('is-single', singlePhoto);
+    viewer.querySelector('.photo-previous').hidden = singlePhoto;
+    viewer.querySelector('.photo-next').hidden = singlePhoto;
   };
 }

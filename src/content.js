@@ -60,7 +60,7 @@ export const team = [
 
 export const treatments = [
   {
-    id: 'mani', number: '01', name: 'Manicure & nail care',
+    id: 'mani', name: 'Manicure & nail care',
     short: 'Piccoli dettagli, grande bellezza.',
     description: 'Un momento dedicato alle tue mani, con la cura che meritano. Dai colori più delicati alla nail art, troviamo insieme il tuo stile.',
     services: [
@@ -76,10 +76,102 @@ export const treatments = [
     position: 'center',
     gallery: manicurePhotos.map(photo => ({ ...photo, image: assetUrl(photo.image), thumbnail: assetUrl(photo.thumbnail) })),
   },
-  { id: 'viso', number: '02', name: 'Trattamenti viso', short: 'Ritrova la tua luce naturale.', description: 'Ascoltare la tua pelle e dedicarti un rituale di bellezza pensato intorno a te.', services: ['Pulizia del viso', 'Trattamenti personalizzati per la pelle', 'Cura e benessere del viso'], image: '/images/hero.webp', alt: 'Immagine dimostrativa di un rituale di cura del viso', position: '65% center' },
-  { id: 'sguardo', number: '03', name: 'Ciglia & sguardo', short: 'La bellezza, al primo sguardo.', description: 'Un’attenzione speciale ai dettagli che rendono il tuo sguardo unico.', services: ['Trattamenti per valorizzare lo sguardo', 'Laminazione ciglia'], image: '/images/eyes.webp', alt: 'Dettaglio dimostrativo di occhi chiusi e ciglia naturali', position: 'center' },
-  { id: 'depilazione', number: '04', name: 'Depilazione', short: 'La leggerezza sulla pelle.', description: 'Cura e delicatezza per sentirti a tuo agio, ogni giorno.', services: ['Ceretta', 'Trattamenti di epilazione'], image: '/images/wellness.webp', alt: 'Accessori dimostrativi dedicati alla cura della pelle', position: 'center' },
-  { id: 'corpo', number: '05', name: 'Corpo & benessere', short: 'Rallenta. Respira. Ritrovati.', description: 'Lascia spazio al relax con un momento dedicato al tuo corpo e al tuo benessere.', services: ['Trattamenti estetici per il corpo', 'Percorsi dedicati al benessere'], image: '/images/studio.webp', alt: 'Ambiente dimostrativo per un momento di relax e benessere', position: 'center' },
+  {
+    id: 'viso', name: 'Viso & benessere',
+    short: 'Ritrova la tua luce naturale.',
+    description: 'Ascoltiamo la tua pelle e le dedichiamo un rituale di bellezza pensato intorno a te.',
+    serviceGroups: [
+      { title: 'Pulizia del viso', services: ['Pulizia viso Basic', 'Pulizia viso Superior Experience'] },
+      { title: 'Rituali viso', services: [
+        'Rituale viso Antigravità',
+        'Rituale viso Esfoliante',
+        'Rituale viso Occhi & Labbra',
+        'Rituale viso Illuminante',
+        'Rituale viso Purificante',
+      ] },
+    ],
+    note: 'Contattaci per informazioni sui trattamenti viso, modalità e prezzi.',
+    ctaLabel: 'Informazioni sui trattamenti',
+    detailsLabel: 'Pulizia e rituali',
+    consultation: {
+      title: 'Il tuo percorso viso',
+      lead: 'Prima di tutto, le tue esigenze.',
+      description: 'Per il viso partiamo sempre da una consulenza gratuita, per studiare insieme il percorso migliore per te.',
+      ctaLabel: 'Prenota la consulenza gratuita',
+    },
+    image: '/images/viso/rituale-viso-thumb.webp',
+    alt: 'Prodotti e accessori per i rituali viso nello spazio benessere di Bealab',
+    position: 'center 70%',
+    coverPosition: 'center 76%',
+    galleryTitle: 'Viso & benessere · Bealab',
+    gallery: [
+      { id: 'rituale-viso', caption: 'Lo spazio e gli accessori per i rituali viso da Bealab', image: assetUrl('/images/viso/rituale-viso.webp'), thumbnail: assetUrl('/images/viso/rituale-viso-thumb.webp'), width: 960, height: 1280 },
+    ],
+  },
+  { id: 'sguardo', name: 'Ciglia & sguardo', short: 'La bellezza, al primo sguardo.', description: 'Un’attenzione speciale ai dettagli che rendono il tuo sguardo unico.', services: ['Trattamenti per valorizzare lo sguardo', 'Laminazione ciglia'], image: '/images/eyes.webp', alt: 'Dettaglio dimostrativo di occhi chiusi e ciglia naturali', position: 'center' },
+  {
+    id: 'epilazione', name: 'Epilazione',
+    short: 'La leggerezza sulla pelle.',
+    description: 'Cura e delicatezza, con il trattamento di epilazione più adatto alla tua pelle.',
+    services: [
+      { name: 'Cera tradizionale' },
+      { name: 'CocoCera, l’originale ceretta brasiliana', description: 'Per tutti i tipi di pelle, anche quelle più delicate.' },
+    ],
+    note: 'Per informazioni sui trattamenti di epilazione, modalità e prezzi, contatta il centro.',
+    detailsLabel: 'Scopri CocoCera',
+    image: '/images/epilazione/prodotti-cococera-thumb.webp',
+    alt: 'Prodotti e attrezzatura CocoCera nel centro Bealab',
+    position: 'center 65%',
+    coverPosition: 'center 72%',
+    galleryTitle: 'Epilazione · Bealab',
+    gallery: [
+      { id: 'prodotti-cococera', caption: 'Prodotti e attrezzatura CocoCera da Bealab', image: assetUrl('/images/epilazione/prodotti-cococera.webp'), thumbnail: assetUrl('/images/epilazione/prodotti-cococera-thumb.webp'), width: 1200, height: 1600 },
+      { id: 'team-exclusive-point', caption: 'La squadra Bealab con il riconoscimento Exclusive Point CocoCera 2026', image: assetUrl('/images/epilazione/team-exclusive-point-2026.webp'), thumbnail: assetUrl('/images/epilazione/team-exclusive-point-2026-thumb.webp'), width: 1200, height: 1600 },
+    ],
+    recognition: { year: 2026, title: 'Exclusive Point CocoCera', photoId: 'team-exclusive-point' },
+    video: {
+      src: assetUrl('/videos/cococera-preparazione.mp4'),
+      poster: assetUrl('/images/epilazione/cococera-video-poster.webp'),
+      title: 'CocoCera, da vicino',
+      description: 'Un momento della preparazione di CocoCera nel nostro studio.',
+      accessibleDescription: 'Video senza audio: la cera CocoCera viene versata nel recipiente per la preparazione.',
+    },
+  },
+  {
+    id: 'corpo', name: 'Corpo & benessere',
+    short: 'Rallenta. Respira. Ritrovati.',
+    description: 'Lascia spazio al relax con un momento dedicato al tuo corpo e al tuo benessere.',
+    servicesTitle: 'Massaggi',
+    services: [
+      { name: 'Massaggio relax', description: 'Sciogli le tensioni e ritrova la tua armonia interiore.' },
+      { name: 'Massaggio decontratturante schiena & cervicale', description: 'Stop a rigidità e tensioni.' },
+      { name: 'Massaggio drenante', description: 'Leggerezza e depurazione profonda per le tue gambe.' },
+      { name: 'Massaggio ayurvedico del piede “Padabhyanga”', description: 'Il benessere di tutto il corpo parte dai nostri piedi.' },
+    ],
+    note: 'Contattaci per scegliere il massaggio più adatto a te e conoscere modalità e prezzi.',
+    ctaLabel: 'Informazioni sui massaggi',
+    detailsLabel: 'Massaggi e percorsi',
+    consultation: {
+      title: 'Trattamenti corpo',
+      lead: 'Drenare, sciogliere, rimodellare, snellire.',
+      description: 'Da Bealab, con una consulenza gratuita, studiamo insieme un percorso personalizzato, su misura per te e per l’obiettivo che vuoi raggiungere.',
+      ctaLabel: 'Prenota la consulenza gratuita',
+    },
+    image: '/images/corpo/ambiente-massaggi-thumb.webp',
+    alt: 'Il lettino e lo spazio dedicato al corpo e al benessere nel centro Bealab',
+    position: 'center 67%',
+    coverPosition: 'center 72%',
+    galleryTitle: 'Corpo & benessere · Bealab',
+    galleryOptions: {
+      eyebrow: 'IL NOSTRO SPAZIO',
+      title: 'Un angolo di benessere',
+      description: 'L’ambiente e i dettagli che accompagnano i tuoi momenti di relax da Bealab.',
+    },
+    gallery: [
+      { id: 'ambiente-massaggi', caption: 'Il lettino e lo spazio dedicato al benessere da Bealab', image: assetUrl('/images/corpo/ambiente-massaggi.webp'), thumbnail: assetUrl('/images/corpo/ambiente-massaggi-thumb.webp'), width: 960, height: 1280 },
+      { id: 'dettagli-relax', caption: 'Asciugamano, ciotola e luci soffuse nel nostro angolo di relax', image: assetUrl('/images/corpo/dettagli-relax.webp'), thumbnail: assetUrl('/images/corpo/dettagli-relax-thumb.webp'), width: 960, height: 1280 },
+    ],
+  },
 ].map(treatment => ({ ...treatment, image: assetUrl(treatment.image) }));
 
 export const values = [
