@@ -78,6 +78,28 @@ export const treatments = [
     gallery: manicurePhotos.map(photo => ({ ...photo, image: assetUrl(photo.image), thumbnail: assetUrl(photo.thumbnail) })),
   },
   {
+    id: 'pedicure', name: 'Pedicure',
+    short: 'Cura e relax, fino alla punta dei piedi.',
+    description: 'Da Bealab il pedicure unisce cura e relax: trattiamo calli e duroni con precisione, levighiamo con uno scrub e concludiamo con una maschera rigenerante e un massaggio finale con una crema specifica per idratare e donare leggerezza ai piedi.',
+    services: [
+      'Pedicure curativo ed estetico',
+      'Pedicure con semipermanente',
+      'Pedicure con smalto normale',
+      'Taglio unghie e applicazione smalto',
+    ],
+    note: 'Contattaci per informazioni sui servizi pedicure, modalità e prezzi.',
+    ctaLabel: 'Informazioni e appuntamenti',
+    detailsLabel: 'Servizi pedicure',
+    image: '/images/pedicure/rituale-pedicure-thumb.webp',
+    alt: 'Prodotti e accessori per il pedicure nel centro Bealab',
+    position: 'center 75%',
+    coverPosition: 'center 85%',
+    galleryTitle: 'Pedicure · Bealab',
+    gallery: [
+      { id: 'rituale-pedicure', caption: 'Prodotti e accessori dedicati al pedicure da Bealab', image: assetUrl('/images/pedicure/rituale-pedicure.webp'), thumbnail: assetUrl('/images/pedicure/rituale-pedicure-thumb.webp'), width: 960, height: 1280 },
+    ],
+  },
+  {
     id: 'viso', name: 'Viso & benessere',
     short: 'Ritrova la tua luce naturale.',
     description: 'Ascoltiamo la tua pelle e le dedichiamo un rituale di bellezza pensato intorno a te.',

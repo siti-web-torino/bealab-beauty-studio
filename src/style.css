@@ -266,6 +266,14 @@ a:focus-visible, button:focus-visible { outline-color: var(--accent); }
   .footer-socials .social-link { flex-wrap: wrap; }
 }
 
+/* L'ultima scheda resta centrata quando occupa una riga da sola. */
+@media (min-width: 701px) {
+  .treatment-card:last-child:nth-child(3n + 1) { grid-column: 3 / span 2; }
+}
+@media (max-width: 700px) {
+  .treatment-card:last-child:nth-child(odd) { grid-column: 1 / -1; width: calc((100% - 17px) / 2); justify-self: center; }
+}
+
 /* Le schede mostrano foto reali e lavori, con le immagini complete su richiesta. */
 .content-dialog.has-gallery { width: min(760px, calc(100% - 32px)); }
 .gallery-cover { display: block; position: relative; width: 100%; padding: 0; background: var(--beige); }
