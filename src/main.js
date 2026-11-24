@@ -73,7 +73,7 @@ document.querySelector('#app').innerHTML = `
 
     <section class="treatments section-pad" id="trattamenti" aria-labelledby="treatments-title">
       <div class="section-heading reveal"><div><span class="eyebrow">I NOSTRI TRATTAMENTI</span><h2 id="treatments-title">Ogni bellezza ha<br><em>il suo rituale.</em></h2></div><div class="heading-aside"><p>Dalle mani al viso, un’attenzione speciale<br>per ogni parte di te.</p><a href="${studio.whatsapp}" class="text-link" ${external}>Troviamo il tuo trattamento ${icon('arrow-up-right')}</a></div></div>
-      <div class="treatment-grid">${treatments.map(t => `<article class="treatment-card reveal"><button class="treatment-image" data-treatment="${t.id}" aria-label="Scopri ${esc(t.name)}"><img src="${t.image}" alt="${esc(t.alt)}" style="object-position:${t.position}" loading="lazy" width="700" height="850"><span class="treatment-open">${icon('plus')}</span></button><div class="treatment-info"><h3>${t.name}</h3><p>${t.short}</p><button class="text-link" data-treatment="${t.id}">${esc(t.detailsLabel || (t.gallery?.length ? 'Servizi e lavori' : 'Richiedi informazioni'))} ${icon('arrow-up-right')}</button></div></article>`).join('')}</div>
+      <div class="treatment-grid">${treatments.map(t => `<article class="treatment-card reveal"><button class="treatment-image" data-treatment="${t.id}" aria-label="Scopri ${esc(t.name)}"><img src="${t.cardImage || t.image}" alt="${esc(t.cardAlt || t.alt)}" style="object-position:${t.cardPosition || t.position}" loading="lazy" width="700" height="850"><span class="treatment-open">${icon('plus')}</span></button><div class="treatment-info"><h3>${t.name}</h3><p>${t.short}</p><button class="text-link" data-treatment="${t.id}">${esc(t.detailsLabel || (t.gallery?.length ? 'Servizi e lavori' : 'Richiedi informazioni'))} ${icon('arrow-up-right')}</button></div></article>`).join('')}</div>
       <p class="section-footnote">Contatta il centro per informazioni sui trattamenti, modalità e prezzi.</p>
     </section>
 
@@ -128,13 +128,13 @@ function treatmentStory(treatment) {
   const photoIndex = recognition ? treatment.gallery.findIndex(photo => photo.id === recognition.photoId) : -1;
   const photo = treatment.gallery?.[photoIndex];
   const video = treatment.video;
-  return `<section class="treatment-story" aria-label="CocoCera da Bealab">
+  return `<section class="treatment-story${!photo ? ' video-only' : ''}" aria-label="${esc(treatment.storyLabel || `${treatment.name} da Bealab`)}">
     ${photo ? `<figure class="recognition-card">
       <button class="treatment-story-frame recognition-photo" type="button" data-photo-index="${photoIndex}" aria-label="Ingrandisci: ${esc(photo.caption)}"><img src="${esc(photo.thumbnail)}" alt="${esc(photo.caption)}" width="${photo.width}" height="${photo.height}" loading="lazy"><span class="gallery-zoom" aria-hidden="true">${icon('plus')}</span></button>
       <figcaption><span class="eyebrow">NEL ${recognition.year} SIAMO DIVENTATE</span><h3>${esc(recognition.title)}</h3></figcaption>
     </figure>` : ''}
     ${video ? `<figure class="treatment-video-card">
-      <div class="treatment-story-frame"><video class="treatment-video" controls playsinline preload="none" poster="${esc(video.poster)}" aria-label="${esc(video.title)}" aria-describedby="treatment-video-description"><source src="${esc(video.src)}" type="video/mp4">Il tuo browser non supporta questo video. <a href="${esc(video.src)}">Apri il video CocoCera</a>.</video></div>
+      <div class="treatment-story-frame"><video class="treatment-video" controls playsinline preload="none" poster="${esc(video.poster)}" aria-label="${esc(video.title)}" aria-describedby="treatment-video-description"><source src="${esc(video.src)}" type="video/mp4">Il tuo browser non supporta questo video. <a href="${esc(video.src)}">Apri il video: ${esc(video.title)}</a>.</video></div>
       <figcaption><span class="eyebrow">UNO SGUARDO NEL NOSTRO STUDIO</span><h3>${esc(video.title)}</h3><p>${esc(video.description)}</p><p class="video-accessibility" id="treatment-video-description">${esc(video.accessibleDescription)}</p></figcaption>
     </figure>` : ''}
   </section>`;
@@ -150,6 +150,14 @@ function consultationMarkup(consultation) {
   </section>`;
 }
 function servicesMarkup(treatment) {
+  if (treatment.pathway) {
+    const pathway = treatment.pathway;
+    return `<section class="treatment-pathway" aria-labelledby="pathway-title">
+      <h3 id="pathway-title">${esc(pathway.title)}</h3>
+      <p class="pathway-introduction">${esc(pathway.introduction)}</p>
+      <ol class="pathway-steps">${pathway.steps.map(step => `<li><h4>${esc(step.name)}</h4><p>${esc(step.description)}</p></li>`).join('')}</ol>
+    </section>`;
+  }
   const groups = treatment.serviceGroups || [{ title: treatment.servicesTitle, services: treatment.services }];
   return groups.map(group => `
     ${group.title ? `<h3 class="service-heading">${esc(group.title)}</h3>` : ''}
@@ -169,6 +177,7 @@ function openTreatment(treatment) {
       <span class="eyebrow">IL TUO RITUALE BEALAB</span>
       <h2 id="dialog-title">${esc(treatment.name)}</h2>
       <p>${esc(treatment.description)}</p>
+      ${treatment.intro ? `<p>${esc(treatment.intro)}</p>` : ''}
       ${servicesMarkup(treatment)}
       <p class="dialog-note">${esc(treatment.note || 'Questa è una selezione dimostrativa. Contatta il centro per confermare servizi disponibili, modalità e prezzi.')}</p>
       <a class="button button-dark" href="${studio.whatsapp}" ${external}>${esc(treatment.ctaLabel || 'Richiedi informazioni')} ${waIcon}</a>

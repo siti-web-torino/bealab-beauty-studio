@@ -1,4 +1,5 @@
 import { manicurePhotos } from './manicure-photos.js';
+import { sguardoPhotos } from './sguardo-photos.js';
 
 // Tutti i dati commerciali da aggiornare prima della pubblicazione sono qui.
 export const assetUrl = path => path.startsWith('data:') ? path : import.meta.env.BASE_URL + path.replace(/^\/+/, '');
@@ -108,7 +109,41 @@ export const treatments = [
       { id: 'rituale-viso', caption: 'Lo spazio e gli accessori per i rituali viso da Bealab', image: assetUrl('/images/viso/rituale-viso.webp'), thumbnail: assetUrl('/images/viso/rituale-viso-thumb.webp'), width: 960, height: 1280 },
     ],
   },
-  { id: 'sguardo', name: 'Ciglia & sguardo', short: 'La bellezza, al primo sguardo.', description: 'Un’attenzione speciale ai dettagli che rendono il tuo sguardo unico.', services: ['Trattamenti per valorizzare lo sguardo', 'Laminazione ciglia'], image: '/images/eyes.webp', alt: 'Dettaglio dimostrativo di occhi chiusi e ciglia naturali', position: 'center' },
+  {
+    id: 'sguardo', name: 'Ciglia & Sopracciglia',
+    short: 'La bellezza, al primo sguardo.',
+    description: 'Lo sguardo che hai sempre desiderato, ma con una cura e una delicatezza senza precedenti.',
+    services: ['Laminazione Ciglia Coreana', 'Laminazione Sopracciglia Coreana', 'Extension Ciglia', 'Definizione e tinta sopracciglia'],
+    note: 'Contattaci per scegliere il trattamento più adatto al tuo sguardo e conoscere modalità e prezzi.',
+    ctaLabel: 'Informazioni e appuntamenti',
+    detailsLabel: 'Trattamenti e prima e dopo',
+    cardImage: assetUrl('/images/sguardo/cabina-ciglia-sopracciglia-thumb.webp'),
+    cardAlt: 'La cabina Bealab dedicata a ciglia e sopracciglia, con lampada e lettino rosa',
+    cardPosition: 'center 65%',
+    image: '/images/sguardo/cabina-ciglia-sopracciglia-thumb.webp',
+    alt: 'La cabina Bealab dedicata a ciglia e sopracciglia, con lampada e lettino rosa',
+    position: 'center 65%',
+    coverPosition: 'center 65%',
+    galleryTitle: 'Ciglia & Sopracciglia · Bealab',
+    galleryOptions: {
+      eyebrow: 'I NOSTRI LAVORI',
+      title: 'Prima, dopo e il tuo nuovo sguardo',
+      description: 'I prima e dopo della laminazione ciglia coreana e delle extension effetto Mascara, le combinazioni ciglia e sopracciglia e gli altri lavori realizzati nel nostro studio.',
+      previewCount: 6,
+      columns: 2,
+      containImages: true,
+      expandLabel: 'Vedi tutte le foto',
+    },
+    gallery: sguardoPhotos.map(photo => ({ ...photo, image: assetUrl(photo.image), thumbnail: assetUrl(photo.thumbnail) })),
+    storyLabel: 'Laminazione ciglia coreana da Bealab',
+    video: {
+      src: assetUrl('/videos/laminazione-ciglia-coreana.mp4'),
+      poster: assetUrl('/images/sguardo/laminazione-video-poster.webp'),
+      title: 'La laminazione coreana, in video',
+      description: 'Uno sguardo al risultato della laminazione ciglia coreana realizzata da Bealab.',
+      accessibleDescription: 'Video senza audio dedicato al risultato della laminazione ciglia coreana.',
+    },
+  },
   {
     id: 'epilazione', name: 'Epilazione',
     short: 'La leggerezza sulla pelle.',
@@ -128,6 +163,7 @@ export const treatments = [
       { id: 'prodotti-cococera', caption: 'Prodotti e attrezzatura CocoCera da Bealab', image: assetUrl('/images/epilazione/prodotti-cococera.webp'), thumbnail: assetUrl('/images/epilazione/prodotti-cococera-thumb.webp'), width: 1200, height: 1600 },
       { id: 'team-exclusive-point', caption: 'La squadra Bealab con il riconoscimento Exclusive Point CocoCera 2026', image: assetUrl('/images/epilazione/team-exclusive-point-2026.webp'), thumbnail: assetUrl('/images/epilazione/team-exclusive-point-2026-thumb.webp'), width: 1200, height: 1600 },
     ],
+    storyLabel: 'CocoCera da Bealab',
     recognition: { year: 2026, title: 'Exclusive Point CocoCera', photoId: 'team-exclusive-point' },
     video: {
       src: assetUrl('/videos/cococera-preparazione.mp4'),
@@ -136,6 +172,42 @@ export const treatments = [
       description: 'Un momento della preparazione di CocoCera nel nostro studio.',
       accessibleDescription: 'Video senza audio: la cera CocoCera viene versata nel recipiente per la preparazione.',
     },
+  },
+  {
+    id: 'laser', name: 'Epilazione Laser',
+    short: 'Pelle liscia e vellutata.',
+    description: 'Pelle liscia e vellutata con l’Epilazione Laser Esthelogue.',
+    intro: 'Da Bealab abbiamo scelto il laser al diodo per eccellenza, famoso per essere efficace su ogni tipo di pelle, da quelle più chiare a quelle più scure, e in ogni momento dell’anno.',
+    pathway: {
+      title: 'Come funziona il percorso?',
+      introduction: 'Partiamo sempre da una consulenza e prova gratuita.',
+      steps: [
+        { name: 'L’Anamnesi', description: 'Raccogliamo tutte le informazioni necessarie per mettere a punto il tuo percorso personalizzato.' },
+        { name: 'Il Protocollo', description: 'Ti indichiamo il numero di sedute previste per il tuo percorso e la routine di preparazione della tua pelle.' },
+        { name: 'I Trattamenti', description: 'Iniziamo il ciclo di sedute, la cui durata varierà in base alla zona da trattare.' },
+      ],
+    },
+    note: 'Ogni percorso viene studiato su misura per te.',
+    ctaLabel: 'Prenota consulenza e prova gratuita',
+    detailsLabel: 'Scopri il percorso laser',
+    image: '/images/laser/laser-esthelogue-thumb.webp',
+    alt: 'Il macchinario per epilazione laser Esthelogue nel centro Bealab',
+    position: 'center 56%',
+    coverPosition: 'center 54%',
+    galleryTitle: 'Epilazione Laser · Bealab',
+    galleryOptions: {
+      eyebrow: 'IL LASER DA BEALAB',
+      title: 'Tecnologia e percorsi',
+      description: 'Il macchinario Esthelogue, la nostra cabina e i prima e dopo forniti dal centro. Ogni percorso è personalizzato.',
+      previewCount: 4,
+      containImages: true,
+    },
+    gallery: [
+      { id: 'laser-esthelogue', caption: 'Il laser al diodo Esthelogue da Bealab', image: assetUrl('/images/laser/laser-esthelogue.webp'), thumbnail: assetUrl('/images/laser/laser-esthelogue-thumb.webp'), width: 960, height: 1280 },
+      { id: 'cabina-laser', caption: 'La cabina dedicata ai trattamenti laser', image: assetUrl('/images/laser/cabina-laser.webp'), thumbnail: assetUrl('/images/laser/cabina-laser-thumb.webp'), width: 960, height: 1280 },
+      { id: 'prima-dopo-ascelle', caption: 'Prima e dopo · ascelle · 1 seduta', image: assetUrl('/images/laser/prima-dopo-ascelle.webp'), thumbnail: assetUrl('/images/laser/prima-dopo-ascelle-thumb.webp'), width: 1080, height: 1350 },
+      { id: 'prima-dopo-schiena', caption: 'Prima e dopo · schiena · 5 sedute', image: assetUrl('/images/laser/prima-dopo-schiena.webp'), thumbnail: assetUrl('/images/laser/prima-dopo-schiena-thumb.webp'), width: 1080, height: 1350 },
+    ],
   },
   {
     id: 'corpo', name: 'Corpo & benessere',

@@ -11,14 +11,18 @@ export function galleryMarkup(photos, {
   eyebrow = 'FATTO DA NOI, PER TE',
   title = 'I nostri lavori',
   description = 'Una selezione di manicure realizzate da Bealab.',
+  previewCount = 3,
+  containImages = false,
+  columns = 3,
+  expandLabel = 'Vedi tutti i lavori',
 } = {}) {
-  return `<section class="treatment-gallery" aria-labelledby="gallery-title">
+  return `<section class="treatment-gallery${containImages ? ' gallery-contain' : ''}" aria-labelledby="gallery-title">
     <span class="eyebrow">${esc(eyebrow)}</span>
     <h3 id="gallery-title">${esc(title)}</h3>
     <p>${esc(description)}<br>Tocca una foto per guardarla da vicino.</p>
-    <div class="treatment-gallery-grid${photos.length === 2 ? ' gallery-pair' : ''}">${photos.slice(0, 3).map(photoTile).join('')}</div>
-    ${photos.length > 3 ? `<details class="gallery-more">
-      <summary class="text-link gallery-toggle"><span class="gallery-toggle-label">Vedi tutti i lavori</span><span class="gallery-total">${photos.length}</span><i data-lucide="arrow-down" aria-hidden="true"></i></summary>
+    <div class="treatment-gallery-grid${photos.length === 2 || previewCount === 4 || columns === 2 ? ' gallery-pair' : ''}">${photos.slice(0, previewCount).map(photoTile).join('')}</div>
+    ${photos.length > previewCount ? `<details class="gallery-more" data-preview-count="${previewCount}" data-expand-label="${esc(expandLabel)}">
+      <summary class="text-link gallery-toggle"><span class="gallery-toggle-label">${esc(expandLabel)}</span><span class="gallery-total">${photos.length}</span><i data-lucide="arrow-down" aria-hidden="true"></i></summary>
       <div class="treatment-gallery-grid gallery-extra"></div>
     </details>` : ''}
   </section>`;
@@ -72,10 +76,11 @@ export function initPhotoGallery(contentDialog, refreshIcons) {
     if (!details.matches('.gallery-more')) return;
     const extra = details.querySelector('.gallery-extra');
     if (details.open && !extra.children.length) {
-      extra.innerHTML = photos.slice(3).map((photo, index) => photoTile(photo, index + 3)).join('');
+      const previewCount = Number(details.dataset.previewCount);
+      extra.innerHTML = photos.slice(previewCount).map((photo, index) => photoTile(photo, index + previewCount)).join('');
       refreshIcons();
     }
-    details.querySelector('.gallery-toggle-label').textContent = details.open ? 'Mostra meno' : 'Vedi tutti i lavori';
+    details.querySelector('.gallery-toggle-label').textContent = details.open ? 'Mostra meno' : details.dataset.expandLabel;
   }, true);
 
   viewer.querySelector('.photo-close').addEventListener('click', () => viewer.close());
