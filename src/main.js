@@ -14,6 +14,8 @@ const safeUrl = (url) => { try { const u = new URL(url); return u.protocol === '
 const icon = (name, cls = '') => `<i data-lucide="${name}" class="${cls}" aria-hidden="true"></i>`;
 const waIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.5L3 20.5l1.3-4.7a8.5 8.5 0 1 1 16.2-4.1Z"/><path d="M8.3 7.6c-.6 0-1.1.7-.9 1.5.5 2.8 2.8 5.1 5.6 5.8.9.2 1.9-.6 1.9-1.2l-2-1-1 .7a6.7 6.7 0 0 1-2.8-2.7l.6-1-1-2.1Z"/></svg>`;
 const external = 'target="_blank" rel="noopener noreferrer"';
+const legal = studio.legal;
+const emailLink = `<a href="mailto:${esc(legal.contact)}">${esc(legal.contact)}</a>`;
 const mark = `<img class="brand-logo" src="${assetUrl('/images/logo-bealab.webp')}" width="1784" height="870" alt="BEALAB BeautyStudio di Giulia Salis">`;
 const instagram = studio.socials.find(s => s.icon === 'instagram');
 const socialLinks = studio.socials.map(s => `<a class="social-link" href="${safeUrl(s.url)}" aria-label="Bealab su ${esc(s.label)} (si apre in una nuova scheda)" ${external}><span class="social-icon">${icon(s.icon)}</span><span class="social-label"><span>Seguici su ${esc(s.label)}</span><small>${esc(s.handle)}</small></span>${icon('arrow-up-right', 'social-arrow')}</a>`).join('');
@@ -51,9 +53,9 @@ document.querySelector('#app').innerHTML = `
         <a class="hero-scroll" href="#filosofia"><span class="circle-arrow">${icon('arrow-down')}</span> PRENDITI IL TUO TEMPO</a>
       </div>
       <div class="hero-visual">
-        <div class="hero-image-frame"><img class="hero-photo" src="${assetUrl('/images/hero.webp')}" width="1536" height="1024" alt="Immagine illustrativa: un momento di relax durante un trattamento viso" fetchpriority="high"></div>
+        <div class="hero-image-frame"><img class="hero-photo" src="${assetUrl('/images/bealab-squadra.webp')}" width="1440" height="1440" alt="Le quattro componenti della squadra Bealab" fetchpriority="high"></div>
         <div class="hero-image-shade"></div>
-        <div class="hero-image-note"><span>BEAUTY IS A FEELING.</span><p>Entra, rilassati.<br>Sei da Bealab.</p><span class="image-demo-label">IMMAGINE DIMOSTRATIVA</span></div>
+        <div class="hero-image-note"><span>BEAUTY IS A FEELING.</span><p>Entra, rilassati.<br>Sei da Bealab.</p></div>
         <div class="round-seal"><span>UN MOMENTO</span>${icon('flower-2')}<span>SOLO PER TE</span></div>
         <span class="hero-side-note">CURA. EQUILIBRIO. BELLEZZA.</span>
       </div>
@@ -61,13 +63,21 @@ document.querySelector('#app').innerHTML = `
     <div class="manifesto-strip"><span>Professionalità, senza formalità.</span><span class="strip-flower">${icon('flower-2')}</span><span>Una chiacchiera. Una coccola.</span><span class="strip-flower">${icon('flower-2')}</span><span>Sentiti come a casa.</span></div>
 
     <section class="about section-pad" id="filosofia" aria-labelledby="about-title">
-      <div class="about-visual reveal"><img src="${assetUrl('/images/studio.webp')}" alt="Immagine dimostrativa di un ambiente beauty dai toni caldi e naturali" loading="lazy" width="1024" height="1280"><span class="vertical-caption">UN’ISPIRAZIONE PER IL NOSTRO MONDO · IMMAGINE DEMO</span><div class="about-image-note">Una chiacchiera.<br><em>Un momento per te.</em></div></div>
+      <div class="about-visual reveal"><img src="${assetUrl('/images/bealab-cabina.webp')}" alt="La cabina trattamenti Bealab con il lettino, gli accessori e la lampada accesa" loading="lazy" width="960" height="1280"><div class="about-image-note">Una chiacchiera.<br><em>Un momento per te.</em></div></div>
       <div class="about-copy reveal"><span class="eyebrow">IL MONDO BEALAB</span><h2 id="about-title">Professionalità sì.<br><em>Senza troppe formalità.</em></h2><p>Nel ${studio.openingYear} abbiamo aperto le porte di Bealab con un’idea semplice: prenderci cura di te con professionalità, facendoti sentire a tuo agio fin dal primo momento.</p><p>Qui si ride, si chiacchiera e ci si rilassa. Ci piace conoscerti, ascoltare quello che cerchi e rendere ogni appuntamento un momento piacevole, con la leggerezza di sentirsi a casa.</p><a class="text-link" href="#squadra">Conosci quelle di Bealab ${icon('arrow-up-right')}</a><div class="about-signature">Ti aspettiamo, Giulia e la squadra.</div></div>
     </section>
 
     <section class="team-section section-pad" id="squadra" aria-labelledby="team-title">
       <div class="section-heading reveal"><div><span class="eyebrow">LA NOSTRA SQUADRA</span><h2 id="team-title">Siamo noi.<br><em>Quelle di Bealab.</em></h2></div><div class="heading-aside team-intro"><p>Giulia, Alessia, Ilenia e Marika.<br>Energie diverse, la stessa missione: farti sentire bene, in relax e a tuo agio.</p></div></div>
-      <div class="team-grid">${team.map(person=>`<article class="team-card reveal"><div class="team-photo"><img src="${person.image}" alt="${esc(person.alt)}" width="800" height="1000" loading="lazy"></div><div class="team-person"><h3>${esc(person.name)}</h3><span>${esc(person.role)}</span></div></article>`).join('')}</div>
+      <div class="team-grid">${team.map((person, index) => `
+        <article class="team-card reveal">
+          <div class="team-photo"><img src="${person.image}" alt="${esc(person.alt)}" width="800" height="1000" loading="lazy"></div>
+          <div class="team-person">
+            <h3>${esc(person.name)}</h3>
+            <span>${esc(person.role)}</span>
+            <button class="text-link team-profile-link" type="button" data-team-profile="${index}">Conosci ${esc(person.name)} ${icon('arrow-up-right')}</button>
+          </div>
+        </article>`).join('')}</div>
       <p class="team-note reveal">${icon('heart-handshake')} Qui si ride, si chiacchiera e ci si sente come a casa.</p>
     </section>
 
@@ -83,9 +93,9 @@ document.querySelector('#app').innerHTML = `
 
     <section class="booking section-pad" id="prenota" aria-labelledby="booking-title"><div class="booking-orbit orbit-one"></div><div class="booking-orbit orbit-two"></div><div class="booking-content reveal"><span class="eyebrow">NON È SOLO UN APPUNTAMENTO. È IL TUO MOMENTO.</span><h2 id="booking-title">Il tuo momento di<br>benessere <em>ti aspetta.</em></h2><p>Per informazioni o per un appuntamento, scrivici.<br class="desktop-break"> Troviamo insieme il tuo momento, con la semplicità di una chiacchiera.</p><div class="booking-buttons"><a class="button button-ivory" href="${studio.whatsapp}" ${external}>${waIcon} Prenota su WhatsApp ${icon('arrow-up-right')}</a><a class="button button-outline-light" href="${studio.phoneHref}">${icon('phone')} Chiama il centro</a>${instagram ? `<a class="button button-outline-light booking-instagram" href="${safeUrl(instagram.url)}" ${external}>${icon('instagram')} Scrivici su Instagram ${icon('arrow-up-right')}</a>` : ''}</div><span class="booking-small">UN MESSAGGIO, IL PRIMO GESTO DI CURA.</span></div></section>
 
-    <section class="contact section-pad" id="contatti" aria-labelledby="contact-title"><div class="contact-copy reveal"><span class="eyebrow">CI TROVI QUI</span><h2 id="contact-title">Un angolo di bellezza,<br><em>a Torino.</em></h2><p>Passa a trovarci in Corso Giovanni Agnelli,<br>nel quartiere Santa Rita. Ti aspettiamo!</p><div class="contact-details"><div>${icon('map-pin')}<div><h3>Vieni a trovarci</h3><p>${studio.address}<br>${studio.postalCode} ${studio.city}</p></div></div><div>${icon('phone')}<div><h3>Parliamone</h3><a href="${studio.phoneHref}">${studio.phone}</a></div></div><div class="contact-hours">${icon('clock-3')}<div class="contact-hours-content"><h3>I nostri orari</h3>${studio.hours.length ? `<table class="opening-hours" aria-label="Orari di apertura"><tbody>${studio.hours.map(h=>`<tr><th scope="row">${esc(h.day)}</th><td>${esc(h.time)}</td></tr>`).join('')}</tbody></table>` : `<p>Contattaci per conoscere gli orari<br>e concordare il tuo appuntamento.</p>`}</div></div></div><a class="text-link" href="${studio.maps}" ${external}>Indicazioni stradali ${icon('arrow-up-right')}</a>${socialLinks ? `<div class="contact-socials">${socialLinks}</div>` : ''}</div><div class="map-panel reveal" id="map-panel"><div class="map-illustration" aria-hidden="true"><span class="map-block block-a"></span><span class="map-block block-b"></span><span class="map-block block-c"></span><span class="map-block block-d"></span><span class="map-road road-one"></span><span class="map-road road-two"></span><span class="map-road road-three"></span><span class="map-road-label">CORSO GIOVANNI AGNELLI</span><span class="map-pin">${icon('map-pin')}</span></div><div class="map-card"><span class="map-card-brand">Bealab</span><p>Corso Giovanni Agnelli 52/C · Torino</p><button id="load-map" class="text-link">Carica Google Maps ${icon('arrow-up-right')}</button><small>Schema illustrativo. Caricando la mappa ti colleghi a Google.</small></div></div></section>
+    <section class="contact section-pad" id="contatti" aria-labelledby="contact-title"><div class="contact-copy reveal"><span class="eyebrow">CI TROVI QUI</span><h2 id="contact-title">Un angolo di bellezza,<br><em>a Torino.</em></h2><p>Passa a trovarci in Corso Giovanni Agnelli,<br>nel quartiere Santa Rita. Ti aspettiamo!</p><div class="contact-details"><div>${icon('map-pin')}<div><h3>Vieni a trovarci</h3><p>${studio.address}<br>${studio.postalCode} ${studio.city}</p></div></div><div>${icon('phone')}<div><h3>Parliamone</h3><a href="${studio.phoneHref}">${studio.phone}</a>${emailLink}</div></div><div class="contact-hours">${icon('clock-3')}<div class="contact-hours-content"><h3>I nostri orari</h3>${studio.hours.length ? `<table class="opening-hours" aria-label="Orari di apertura"><tbody>${studio.hours.map(h=>`<tr><th scope="row">${esc(h.day)}</th><td>${esc(h.time)}</td></tr>`).join('')}</tbody></table>` : `<p>Contattaci per conoscere gli orari<br>e concordare il tuo appuntamento.</p>`}</div></div></div><a class="text-link" href="${studio.maps}" ${external}>Indicazioni stradali ${icon('arrow-up-right')}</a>${socialLinks ? `<div class="contact-socials">${socialLinks}</div>` : ''}</div><div class="map-panel reveal" id="map-panel"><div class="map-illustration" aria-hidden="true"><span class="map-block block-a"></span><span class="map-block block-b"></span><span class="map-block block-c"></span><span class="map-block block-d"></span><span class="map-road road-one"></span><span class="map-road road-two"></span><span class="map-road road-three"></span><span class="map-road-label">CORSO GIOVANNI AGNELLI</span><span class="map-pin">${icon('map-pin')}</span></div><div class="map-card"><span class="map-card-brand">Bealab</span><p>Corso Giovanni Agnelli 52/C · Torino</p><button id="load-map" class="text-link">Carica Google Maps ${icon('arrow-up-right')}</button><small>Schema illustrativo. Caricando la mappa ti colleghi a Google.</small></div></div></section>
   </main>
-  <footer class="footer"><div class="footer-main"><div class="footer-brand"><a class="brand" href="#home" aria-label="Bealab, inizio pagina">${mark}</a><p>Professionalità, una chiacchiera<br>e un momento per te. A Torino, dal ${studio.openingYear}.</p></div><div class="footer-links"><span class="eyebrow">ESPLORA</span><a href="#filosofia">Il nostro mondo</a><a href="#squadra">Quelle di Bealab</a><a href="#trattamenti">I trattamenti</a><a href="#contatti">Dove siamo</a></div><div class="footer-links"><span class="eyebrow">RESTIAMO IN CONTATTO</span><a href="${studio.phoneHref}">${studio.phone}</a><a href="${studio.whatsapp}" ${external}>Scrivici su WhatsApp ${icon('arrow-up-right')}</a><p>${studio.address}<br>${studio.postalCode} ${studio.city}</p>${socialLinks ? `<div class="footer-socials">${socialLinks}</div>` : ''}</div><a class="back-top" href="#home" aria-label="Torna all’inizio">${icon('arrow-up-right')}</a></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} Bealab – Beauty Studio</span><span>Foto del team, manicure, CocoCera e immagini illustrative</span><button class="privacy-link" data-privacy>Informativa privacy</button></div></footer>
+  <footer class="footer"><div class="footer-main"><div class="footer-brand"><a class="brand" href="#home" aria-label="Bealab, inizio pagina">${mark}</a><p>Professionalità, una chiacchiera<br>e un momento per te. A Torino, dal ${studio.openingYear}.</p></div><div class="footer-links"><span class="eyebrow">ESPLORA</span><a href="#filosofia">Il nostro mondo</a><a href="#squadra">Quelle di Bealab</a><a href="#trattamenti">I trattamenti</a><a href="#contatti">Dove siamo</a></div><div class="footer-links"><span class="eyebrow">RESTIAMO IN CONTATTO</span><a href="${studio.phoneHref}">${studio.phone}</a><a href="${studio.whatsapp}" ${external}>Scrivici su WhatsApp ${icon('arrow-up-right')}</a><p>${studio.address}<br>${studio.postalCode} ${studio.city}</p>${socialLinks ? `<div class="footer-socials">${socialLinks}</div>` : ''}</div><a class="back-top" href="#home" aria-label="Torna all’inizio">${icon('arrow-up-right')}</a></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} Bealab – Beauty Studio</span><div class="footer-legal"><span>${esc(legal.owner)} · ${esc(legal.businessType)}</span><span>P. IVA ${esc(legal.vatNumber)} · REA ${esc(legal.rea)}</span><span>Sede legale · ${esc(legal.registeredOffice)}</span></div><button class="privacy-link" data-privacy>Informativa privacy</button></div></footer>
   <a class="floating-whatsapp" href="${studio.whatsapp}" ${external} aria-label="Contatta Bealab su WhatsApp">${waIcon}<span>Parliamone</span></a>
   <dialog class="content-dialog" id="content-dialog" aria-labelledby="dialog-title"><div class="dialog-toolbar"><button class="dialog-close" aria-label="Chiudi finestra">${icon('x')}</button></div><div id="dialog-content"></div></dialog>
 `;
@@ -189,7 +199,38 @@ function openTreatment(treatment) {
 document.querySelectorAll('[data-treatment]').forEach(button => button.addEventListener('click', () => {
   openTreatment(treatments.find(treatment => treatment.id === button.dataset.treatment));
 }));
-document.querySelectorAll('[data-privacy]').forEach(button=>button.addEventListener('click',()=>openContent(`<div class="dialog-body privacy-body"><span class="eyebrow">TRASPARENZA E PRIVACY</span><h2 id="dialog-title">La tua privacy,<br><em>con cura.</em></h2><p class="privacy-status">Documento preliminare per la demo, da completare prima della pubblicazione. Non costituisce un’informativa definitiva.</p><h3>Come funziona questa demo</h3><p>Il sito non contiene moduli per raccogliere dati personali, non utilizza strumenti di analisi, pubblicità o cookie di profilazione. Font e immagini vengono serviti dal sito. Il gestore dell’hosting può trattare dati tecnici di connessione secondo le proprie condizioni.</p><h3>Servizi esterni</h3><p>I collegamenti a WhatsApp e Google aprono i rispettivi servizi solo quando scegli di visitarli. La mappa Google non è caricata automaticamente: il pulsante dedicato attiva la connessione a Google, che può trattare indirizzo IP e altri dati tecnici secondo la propria <a href="https://policies.google.com/privacy?hl=it" ${external}>informativa privacy</a>. Consultare anche l’<a href="https://www.whatsapp.com/legal/privacy-policy?lang=it" ${external}>informativa WhatsApp</a>.</p><h3>Informazioni del titolare</h3><dl class="legal-fields"><dt>Titolare e recapito privacy</dt><dd>${esc(studio.legal.owner || 'Da inserire dal titolare prima della pubblicazione')}${studio.legal.contact ? ' · '+esc(studio.legal.contact) : ''}</dd><dt>Partita IVA</dt><dd>${esc(studio.legal.vatNumber || 'Da verificare e inserire prima della pubblicazione')}</dd><dt>Fornitori del servizio</dt><dd>${esc(studio.legal.providers || 'Hosting e relativi fornitori da confermare')}</dd></dl></div>`)));
+document.querySelectorAll('[data-team-profile]').forEach(button => {
+  button.addEventListener('click', () => {
+    const person = team[Number(button.dataset.teamProfile)];
+    openContent(`<div class="dialog-body team-bio">
+      <h2 id="dialog-title">${esc(person.name)}</h2>
+      <p class="team-bio-role">${esc(person.role)}</p>
+      ${person.bio.map(paragraph => `<p>${esc(paragraph)}</p>`).join('')}
+    </div>`);
+  });
+});
+
+document.querySelector('[data-privacy]').addEventListener('click', () => openContent(`
+  <div class="dialog-body privacy-body">
+    <h2 id="dialog-title">Informativa privacy</h2>
+    <p class="privacy-status">Informativa del sito in revisione.</p>
+    <h3>Titolare del trattamento</h3>
+    <dl class="legal-fields">
+      <dt>Attività</dt><dd>${esc(legal.owner)} · ${esc(legal.businessType)}</dd>
+      <dt>Sede legale</dt><dd>${esc(legal.registeredOffice)}</dd>
+      <dt>Sede del centro</dt><dd>${esc(studio.address)}, ${esc(studio.postalCode)} ${esc(studio.city)}</dd>
+      <dt>Partita IVA</dt><dd>${esc(legal.vatNumber)}</dd>
+      <dt>REA</dt><dd>${esc(legal.rea)}</dd>
+      <dt>Contatto privacy</dt><dd>${emailLink}</dd>
+    </dl>
+    <h3>Navigazione</h3>
+    <p>Il sito non usa moduli, strumenti di analisi o cookie di profilazione. Si serve della memoria di sessione del browser per mostrare l’animazione introduttiva una sola volta per scheda. Il gestore dell’hosting, <a href="https://vercel.com/legal/privacy-policy" ${external}>Vercel</a>, può trattare dati tecnici di connessione.</p>
+    <h3>Contatti e servizi esterni</h3>
+    <p>Puoi contattare il centro per informazioni e appuntamenti tramite email, telefono o i collegamenti a <a href="https://www.whatsapp.com/legal/privacy-policy?lang=it" ${external}>WhatsApp</a> e <a href="https://privacycenter.instagram.com/policy/" ${external}>Instagram</a>.</p>
+    <p>La mappa si collega a Google quando premi «Carica Google Maps». Google può trattare dati tecnici di connessione secondo la propria <a href="https://policies.google.com/privacy?hl=it" ${external}>informativa privacy</a>.</p>
+    <h3>Richieste sui tuoi dati</h3>
+    <p>Per esercitare i diritti previsti dal GDPR puoi scrivere a ${emailLink}. Puoi anche presentare un reclamo al <a href="https://www.garanteprivacy.it/" ${external}>Garante per la protezione dei dati personali</a>.</p>
+  </div>`));
 
 contentDialog.querySelector('.dialog-close').addEventListener('click',()=>contentDialog.close());
 contentDialog.addEventListener('click',e=>{if(e.target===contentDialog){const r=contentDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)contentDialog.close();}});

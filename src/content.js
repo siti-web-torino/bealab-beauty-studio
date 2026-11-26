@@ -18,17 +18,24 @@ export const studio = {
   googleReviewsUrl: 'https://www.google.com/maps/place/Bealab+-+Beauty+Studio/@45.040123,7.6464334,17z/data=!4m8!3m7!1s0x478813decc410729:0xf3af2fa468d469c9!8m2!3d45.040123!4d7.6464334!9m1!1b1!16s%2Fg%2F11rvdccdp6?hl=it',
   hours: [
     { day: 'Lunedì', time: 'Chiuso' },
-    { day: 'Martedì', time: '9:30 – 19:00' },
-    { day: 'Mercoledì', time: '9:30 – 19:00' },
-    { day: 'Giovedì', time: '8:30 – 19:30' },
-    { day: 'Venerdì', time: '8:30 – 19:30' },
-    { day: 'Sabato', time: '9:30 – 13:30' },
+    { day: 'Martedì', time: '10:00 – 19:30' },
+    { day: 'Mercoledì', time: '10:00 – 19:30' },
+    { day: 'Giovedì', time: '09:00 – 17:00' },
+    { day: 'Venerdì', time: '10:00 – 18:00' },
+    { day: 'Sabato', time: '09:00 – 14:00' },
     { day: 'Domenica', time: 'Chiuso' },
   ],
   socials: [
     { label: 'Instagram', handle: '@bealab_beautystudio', icon: 'instagram', url: 'https://www.instagram.com/bealab_beautystudio/' },
   ],
-  legal: { owner: '', vatNumber: '', contact: '', providers: '' },
+  legal: {
+    owner: 'Bealab di Giulia Salis',
+    businessType: 'Impresa individuale',
+    vatNumber: '12651090016',
+    rea: 'TO – 1305814',
+    registeredOffice: 'Corso Sebastopoli 297, 10136 Torino',
+    contact: 'bealabgiulia@gmail.com',
+  },
   // Trascritte dagli screenshot Google Maps forniti dall’utente. Cognomi abbreviati su sua richiesta.
   reviews: [
     {
@@ -53,10 +60,53 @@ export const studio = {
 };
 
 export const team = [
-  { name: 'Giulia', role: 'Titolare', image: '/images/team-giulia.webp', alt: 'Giulia, titolare di Bealab' },
-  { name: 'Alessia', role: 'Il team Bealab', image: '/images/team-alessia.webp', alt: 'Alessia, della squadra Bealab' },
-  { name: 'Ilenia', role: 'Il team Bealab', image: '/images/team-ilenia.webp', alt: 'Ilenia, della squadra Bealab' },
-  { name: 'Marika', role: 'Il team Bealab', image: '/images/team-marika.webp', alt: 'Marika, della squadra Bealab' },
+  {
+    name: 'Giulia',
+    role: 'Titolare',
+    image: '/images/team-giulia.webp',
+    alt: 'Giulia, titolare di Bealab',
+    bio: [
+      'Meticolosa, ostinata e testarda al punto giusto… sono Giulia, titolare di BeaLab.',
+      'La passione per l’estetica inizia già in tenera età: da bambina «giocavo» a prendermi cura di mia nonna Beatrice, ed è proprio a lei che ho voluto dedicare il nome del mio centro.',
+      'All’età di 17 anni mi sono avvicinata al mondo dell’estetica… e da lì non ne sono più uscita! Il 2 aprile 2022 si è realizzato il mio sogno: aprire il mio centro estetico.',
+      'Oggi mi occupo principalmente di unghie e tatuaggi: precisione, dettagli e simmetria sono la mia ossessione.',
+      'BeaLab nasce per stravolgere il mondo estetico, un mondo dove spesso ci si sente «giudicati» e «fuori posto» (sì, sono la prima che spesso si è sentita così!)… qui la parola d’ordine è sentirsi a casa. Per questo ogni giorno faccio del mio meglio perché ogni cliente sia accolta, ascoltata e valorizzata.',
+    ],
+  },
+  {
+    name: 'Alessia',
+    role: 'Trattamenti viso, ciglia e sopracciglia',
+    image: '/images/team-alessia.webp',
+    alt: 'Alessia, della squadra Bealab',
+    bio: [
+      'Precisa, solare e appassionata: Alessia, cuore pulsante di BeaLab, è il mio braccio destro.',
+      'In questi anni è «cresciuta» tantissimo impegnandosi giorno dopo giorno, diventando un punto di riferimento per i trattamenti viso, le ciglia e le sopracciglia. Che si tratti di una pelle da coccolare o di uno sguardo da valorizzare, lei sa sempre come farvi uscire rilassate e con il sorriso.',
+      'Con lei, la vostra pelle e le vostre ciglia sono davvero in ottime mani!',
+    ],
+  },
+  {
+    name: 'Ilenia',
+    role: 'Massaggi, trattamenti corpo e laser',
+    image: '/images/team-ilenia.webp',
+    alt: 'Ilenia, della squadra Bealab',
+    bio: [
+      'Dolce, precisa e tenace: lei è Ilenia, una di quelle persone che fanno bene al cuore (e anche alla pelle!).',
+      'Con mani delicate ma sicure, si prende cura di voi con massaggi rilassanti, trattamenti corpo rigeneranti e percorsi laser personalizzati.',
+      'Il suo modo di lavorare è un mix raro di precisione, ascolto e quella gentilezza che ti fa sentire subito a casa. Ha costruito con impegno e passione il suo percorso formativo che oggi la rende una vera professionista… un punto fermo del team BeaLab.',
+      'Se cercate una coccola vera, la trovate in lei!',
+    ],
+  },
+  {
+    name: 'Marika',
+    role: 'Manicure, pedicure ed epilazione',
+    image: '/images/team-marika.webp',
+    alt: 'Marika, della squadra Bealab',
+    bio: [
+      'Premurosa, determinata e ossessionata dai dettagli: Marika è una parte preziosa del team BeaLab.',
+      'Specializzata in manicure, pedicure ed epilazione, affronta ogni giornata con l’impegno di chi vuole dare sempre il massimo. Non si accontenta mai finché non vede brillare ogni risultato: ama ridonare splendore e perfezione in tutti i trattamenti.',
+      'Se cercate mani impeccabili e piedi perfetti siete nel posto giusto!',
+    ],
+  },
 ].map(person => ({ ...person, image: assetUrl(person.image) }));
 
 export const treatments = [
