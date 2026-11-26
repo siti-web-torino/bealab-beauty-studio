@@ -1,10 +1,10 @@
 const esc = text => String(text).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
 
 function photoTile(photo, index) {
-  return `<button class="gallery-tile" type="button" data-photo-index="${index}" aria-label="Ingrandisci: ${esc(photo.caption)}">
+  return `<a class="gallery-tile" href="${esc(photo.image)}" data-photo-index="${index}" aria-label="Ingrandisci: ${esc(photo.caption)}">
     <span class="gallery-tile-image"><img src="${esc(photo.thumbnail)}" alt="" width="${photo.width}" height="${photo.height}" loading="lazy" decoding="async"><span class="gallery-zoom" aria-hidden="true"><i data-lucide="plus"></i></span></span>
     <span class="gallery-tile-caption">${esc(photo.caption)}</span>
-  </button>`;
+  </a>`;
 }
 
 export function galleryMarkup(photos, {
@@ -28,7 +28,7 @@ export function galleryMarkup(photos, {
   </section>`;
 }
 
-export function initPhotoGallery(contentDialog, refreshIcons) {
+export function initPhotoGallery(contentDialog, refreshIcons, photoRegion = contentDialog) {
   let photos = [];
   let currentIndex = 0;
   let galleryTitle = 'Manicure · Bealab';
@@ -63,15 +63,16 @@ export function initPhotoGallery(contentDialog, refreshIcons) {
     count.textContent = `${currentIndex + 1} / ${photos.length}`;
   }
 
-  contentDialog.addEventListener('click', event => {
+  photoRegion.addEventListener('click', event => {
     const trigger = event.target.closest('[data-photo-index]');
-    if (!trigger || !photos.length) return;
-    contentDialog.querySelectorAll('video').forEach(video => video.pause());
+    if (!trigger || !photos.length || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    photoRegion.querySelectorAll('video').forEach(video => video.pause());
     showPhoto(Number(trigger.dataset.photoIndex));
     viewer.showModal();
     syncScrollLock();
   });
-  contentDialog.addEventListener('toggle', event => {
+  photoRegion.addEventListener('toggle', event => {
     const details = event.target;
     if (!details.matches('.gallery-more')) return;
     const extra = details.querySelector('.gallery-extra');

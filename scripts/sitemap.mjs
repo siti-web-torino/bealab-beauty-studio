@@ -1,18 +1,38 @@
-import { writeFile, rm } from 'node:fs/promises';
-const raw = process.env.SITE_URL;
-if (!raw) {
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { treatments } from '../src/content.js';
+import { esc } from '../src/page.js';
+import { searchMetadata, treatmentSlugs } from '../src/search-data.js';
+import { publicSiteUrl, renderPageHtml } from './page-html.mjs';
+
+const configuredSite = process.env.SITE_URL;
+const url = new URL(configuredSite || publicSiteUrl);
+if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) {
+  throw new Error('SITE_URL deve essere un URL HTTPS pubblico senza credenziali, query o frammenti.');
+}
+if (!url.pathname.endsWith('/')) url.pathname += '/';
+const siteUrl = url.href;
+const indexable = process.env.VERCEL_ENV
+  ? process.env.VERCEL_ENV === 'production'
+  : Boolean(configuredSite);
+
+const template = await readFile('dist/index.html', 'utf8');
+await Promise.all([undefined, ...treatments].map(async treatment => {
+  const output = treatment ? 'dist/trattamenti/' + treatmentSlugs[treatment.id] : 'dist';
+  await mkdir(output, { recursive: true });
+  await writeFile(output + '/index.html', renderPageHtml(template, { siteUrl, indexable, treatment }));
+}));
+
+if (indexable) {
+  const pages = [undefined, ...treatments].map(treatment => searchMetadata(siteUrl, treatment).canonical);
+  const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + pages.map(page => '  <url><loc>' + esc(page) + '</loc></url>\n').join('')
+    + '</urlset>\n';
+  await writeFile('dist/sitemap.xml', sitemap);
+  await writeFile('dist/robots.txt', 'User-agent: *\nAllow: /\nSitemap: ' + new URL('sitemap.xml', siteUrl).href + '\n');
+} else {
   await rm('dist/sitemap.xml', { force: true });
   await writeFile('dist/robots.txt', 'User-agent: *\nDisallow: /\n');
-  console.log('Demo non indicizzata. Impostare SITE_URL al dominio reale per generare la sitemap.');
-} else {
-  const url = new URL(raw);
-  if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) throw new Error('SITE_URL deve essere un URL HTTPS pubblico senza credenziali, query o frammenti.');
-  const base = url.href.replace(/\/$/, '');
-  const { readFile } = await import('node:fs/promises');
-  let html = await readFile('dist/index.html', 'utf8');
-  html = html.replace('<meta name="robots" content="noindex, nofollow" />', `<meta name="robots" content="index, follow" /><link rel="canonical" href="${base}/" />`).replace(/(<meta property="og:url" content=")[^"]*(")/, (_, prefix, suffix) => `${prefix}${base}/${suffix}`).replace(/(<meta property="og:image" content=")[^"]*(")/, (_, prefix, suffix) => `${prefix}${base}/images/bealab-squadra.webp${suffix}`);
-  await writeFile('dist/index.html', html);
-  await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${base}/</loc></url></urlset>\n`);
-  await writeFile('dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${base}/sitemap.xml\n`);
-  console.log('Sitemap XML e metadati generati per il dominio configurato. Pubblicare solo dopo la verifica dei contenuti.');
 }
+
+console.log('Pagine HTML generate: home e ' + treatments.length + ' trattamenti. Indicizzazione: ' + (indexable ? 'attiva' : 'disattivata') + '.');

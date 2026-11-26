@@ -6,7 +6,7 @@ Sito vetrina dimostrativo in italiano, sviluppato con Vite e JavaScript. Non ric
 
 La demo pubblica è disponibile su **https://bealab-beauty-studio.vercel.app/** e il repository è `siti-web-torino/bealab-beauty-studio`. Vercel è collegato a GitHub: i push su `main` avviano la pubblicazione. Il progetto usa il framework Vite, `npm run build` e la directory di output `dist`; su Vercel il percorso base deve restare `/` (non impostare `VITE_BASE_PATH` al percorso GitHub Pages). Verificare il completamento della pubblicazione prima di condividere una modifica.
 
-La demo resta `noindex,nofollow`. I metadati di condivisione puntano all’indirizzo Vercel; impostando `SITE_URL` al dominio definitivo la build aggiorna URL e sitemap e abilita l’indicizzazione, da fare dopo la conferma dei contenuti e dei dati legali.
+La build genera la home e le sette pagine dei trattamenti come HTML, con titolo, descrizione, URL canonico, anteprima social e dati strutturati. Su Vercel l’ambiente `production` pubblica anche `robots.txt` e `sitemap.xml` per la scansione. Gli ambienti preview di Vercel restano `noindex`. Il dominio pubblico predefinito è quello indicato sopra. Impostare `SITE_URL` se cambia.
 
 ## Pubblicazione alternativa su GitHub Pages
 
@@ -72,7 +72,7 @@ La cartella `dist/` è distribuibile su hosting statico. Non contiene segreti. L
 - `public/images/manicure/`: versioni WebP delle 18 fotografie originali del cliente, con miniature separate per il sito e immagini grandi per la vista ingrandita. Le foto non sono state ritoccate o rigenerate; gli originali ricevuti sono conservati fuori dal checkout in `/workspace/bealab-assets/manicure-originals/`.
 - `public/images/`: immagini WebP locali, sostituibili mantenendo gli stessi nomi. I ritratti `team-*.webp` sono adattamenti realizzati con uno strumento di editing generativo a partire dalle fotografie fornite in chat: non sono copie identiche dei file originali. Per la sezione squadra si usano i ritratti già approvati da Giulia, con le quattro presentazioni fornite nella chat del 25 novembre. Le foto originali `bealab-squadra.webp` e `bealab-cabina.webp` mostrano il team e la cabina nelle prime due sezioni del sito. Le fotografie diverse dai lavori manicure, dai materiali CocoCera, dalle foto laser, dai materiali Ciglia & Sopracciglia, dalla foto Pedicure, dalle foto Corpo & benessere, da Viso & benessere, dalla foto della cabina e dalle foto del team sono illustrazioni generate per la demo, non immagini del salone o prove di trattamenti effettivamente eseguiti. Le risorse di lavoro sono conservate fuori dal checkout in `/workspace/generated_images`.
 - `public/images/logo-bealab.webp`: adattamento con sfondo trasparente del logo fornito, ottenuto con lo stesso strumento generativo; per l’identità ufficiale usare il file originale. La palette del sito riprende rosa peonia, lilla e fucsia dal post ufficiale condiviso dall’utente.
-- `index.html`: metadati SEO e Open Graph.
+- `src/search-data.js`: titoli, descrizioni, dati strutturati e URL delle pagine dei trattamenti. `scripts/page-html.mjs` e `scripts/sitemap.mjs`: generazione della home, delle pagine e della sitemap.
 
 I font Cormorant Garamond e DM Sans sono serviti localmente tramite Fontsource. Le icone sono Lucide (ISC); i font includono le rispettive licenze SIL OFL nei pacchetti installati. Non sono presenti analytics o pixel pubblicitari.
 
@@ -82,16 +82,16 @@ I font Cormorant Garamond e DM Sans sono serviti localmente tramite Fontsource. 
 2. Sostituire le immagini illustrative con foto autorizzate, se disponibili, e aggiornare le relative diciture.
 3. Il collegamento alle recensioni in `studio.googleReviewsUrl` usa la scheda Google Maps verificata confrontando nome, indirizzo e telefono. Le tre testimonianze sono trascritte dagli screenshot forniti dall’utente, con i cognomi abbreviati come richiesto; l’apertura della scheda non sostituisce la conferma del proprietario sui materiali usati.
 4. I dati d’impresa forniti dalla titolare sono in `studio.legal` e gli orari con decorrenza gennaio 2027 in `studio.hours`. Per completare l’informativa privacy occorre confermare prassi del centro, conservazione dei dati e condizioni dell’hosting. La mappa non comporta richieste a Google prima del clic; la scelta non viene memorizzata.
-5. Impostare `SITE_URL` al dominio HTTPS definitivo e compilare:
+5. Per una build pubblica su un hosting diverso da Vercel, impostare `SITE_URL` al dominio HTTPS definitivo:
 
 ```sh
 SITE_URL=https://DOMINIO-VERIFICATO npm run build
 ```
 
-Il comando produce `dist/sitemap.xml`, `robots.txt`, URL canonico e Open Graph assoluti. Senza `SITE_URL` la demo resta `noindex,nofollow`, `robots.txt` vieta l’indicizzazione e non viene inventato un dominio per la sitemap. Il dominio dell’esempio è un segnaposto da sostituire.
+Il comando produce `dist/sitemap.xml`, `robots.txt`, URL canonici e Open Graph assoluti. Una build locale senza `SITE_URL` resta `noindex`. Un deploy Vercel di produzione abilita la scansione automaticamente.
 
 6. Pubblicare il contenuto di `dist/` su un hosting statico e verificare HTTPS, collegamenti e anteprime social sul dominio reale. Lo sviluppo e il salvataggio della configurazione cloud non pubblicano automaticamente il sito né effettuano push su GitHub.
 
 ## Verifiche
 
-La compilazione controlla il bundle. Il flusso è stato verificato con Chromium/Playwright su desktop e smartphone: menu, collegamenti interni, dettagli dei cinque trattamenti, WhatsApp senza testo precompilato, chiusura delle finestre con il tasto Escape, privacy e caricamento differito della mappa. Le aperture dei servizi esterni non costituiscono una verifica delle loro funzionalità o della scheda Google ufficiale.
+La compilazione controlla il bundle. Il flusso è stato verificato con Chromium/Playwright su desktop e smartphone: menu, collegamenti interni, dettagli dei sette trattamenti, WhatsApp senza testo precompilato, chiusura delle finestre con il tasto Escape, privacy e caricamento differito della mappa. Le aperture dei servizi esterni non costituiscono una verifica delle loro funzionalità o della scheda Google ufficiale.

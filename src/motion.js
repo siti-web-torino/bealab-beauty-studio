@@ -83,7 +83,7 @@ export function initMotion() {
     root.style.setProperty('--reading-progress', progress.toFixed(4));
     header.classList.toggle('is-scrolled', position > 24);
     const drift = !reducedMotion.matches && finePointer.matches ? Math.min(position / 24, 12) : 0;
-    hero.style.setProperty('--hero-drift', `${drift}px`);
+    hero?.style.setProperty('--hero-drift', `${drift}px`);
   }
 
   function scheduleScroll() {

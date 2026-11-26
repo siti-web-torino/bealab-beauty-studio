@@ -2,7 +2,9 @@ import { manicurePhotos } from './manicure-photos.js';
 import { sguardoPhotos } from './sguardo-photos.js';
 
 // Tutti i dati commerciali da aggiornare prima della pubblicazione sono qui.
-export const assetUrl = path => path.startsWith('data:') ? path : import.meta.env.BASE_URL + path.replace(/^\/+/, '');
+// Vite provides the base in the browser. The build also renders HTML in Node.
+const basePath = import.meta.env?.BASE_URL ?? (process.env.VITE_BASE_PATH || '/');
+export const assetUrl = path => path.startsWith('data:') ? path : basePath + path.replace(/^\/+/, '');
 
 export const studio = {
   name: 'Bealab – Beauty Studio',
